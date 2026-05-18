@@ -9,6 +9,7 @@ interface ShimmerButtonProps {
   shimmerColor?: string
   shimmerSize?: string
   shimmerDuration?: number
+  onClick?: () => void  // ✅ ajouté
 }
 
 export function ShimmerButton({
@@ -17,9 +18,11 @@ export function ShimmerButton({
   shimmerColor = "#ffffff",
   shimmerSize = "105%",
   shimmerDuration = 2,
+  onClick,  // ✅ ajouté
 }: ShimmerButtonProps) {
   return (
     <motion.button
+      onClick={onClick}  // ✅ ajouté
       className={cn(
         "relative inline-flex overflow-hidden rounded-lg bg-primary px-8 py-4 text-primary-foreground transition-colors hover:bg-primary/90",
         className
