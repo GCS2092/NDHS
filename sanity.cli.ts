@@ -5,8 +5,4 @@ export default defineCliConfig({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   },
-  studio: {
-    port: 3333,
-    host: 'localhost',
-  },
 });
