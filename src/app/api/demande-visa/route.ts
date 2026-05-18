@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -17,7 +15,6 @@ export async function POST(request: NextRequest) {
       message 
     } = body;
 
-    // Validation
     if (!fullName || !email || !phone || !destination || !travelDate || !visaType || !passportNumber) {
       return NextResponse.json(
         { error: 'Tous les champs requis doivent être remplis' },
@@ -25,7 +22,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
@@ -34,8 +30,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('RESEND_API_KEY non configurée — email non envoyé');
+      return NextResponse.json(
+        { success: true, message: 'Demande reçue (email désactivé)' },
+        { status: 200 }
+      );
+    }
+
+    // Initialisation lazy de Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    const { error } = await resend.emails.send({
       from: 'NDHS Visa <visa@ndhs.sn>',
       to: process.env.CONTACT_EMAIL || 'contact@ndhs.sn',
       subject: `[Demande Visa] ${fullName} - ${destination}`,
