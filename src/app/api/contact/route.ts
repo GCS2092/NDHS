@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -25,8 +23,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
+    // Vérifier si la clé API est disponible
+    if (!process.env.RESEND_API_KEY) {
+      console.warn('RESEND_API_KEY non configurée — email non envoyé');
+      return NextResponse.json(
+        { success: true, message: 'Message reçu (email désactivé)' },
+        { status: 200 }
+      );
+    }
+
+    // Initialisation lazy de Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    const { error } = await resend.emails.send({
       from: 'NDHS Contact <contact@ndhs.sn>',
       to: process.env.CONTACT_EMAIL || 'contact@ndhs.sn',
       subject: `[Contact Web] ${subject}`,
