@@ -1,4 +1,4 @@
-import { defineConfig } from 'next-sanity';
+import { defineConfig } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { schemas } from './schemas';
