@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion, AnimatePresence, useMotionValue, useTransform, PanInfo } from "framer-motion"
+import { motion, AnimatePresence, useMotionValue, PanInfo } from "framer-motion"
 import Image from "next/image"
 import { X, ZoomIn } from "lucide-react"
 
@@ -19,7 +19,7 @@ export function ImageZoom({ src, alt, className }: ImageZoomProps) {
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  const handlePan = (event: PanInfo, info: PanInfo) => {
+  const handlePan = (event: PointerEvent, info: PanInfo) => {  // ✅ fix
     x.set(info.offset.x)
     y.set(info.offset.y)
   }
